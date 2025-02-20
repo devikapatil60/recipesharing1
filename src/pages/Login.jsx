@@ -12,22 +12,21 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    if (!storedUser) {
-      setError("No registered user found!");
-      return;
-    }
-
-    if (storedUser.email === credentials.email && storedUser.password === credentials.password) {
-      localStorage.setItem("loggedInUser", storedUser.email); // ✅ Save logged-in user
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    console.log("Users from Local Storage:", users);
+  
+    let foundUser = users.find(user => user.email === credentials.email && user.password === credentials.password);
+    console.log("Found User:", foundUser);
+  
+    if (foundUser) {
+      localStorage.setItem("loggedInUser", foundUser.email);
       alert("Login Successful!");
       navigate("/");
     } else {
       setError("Invalid email or password!");
     }
   };
-
+  
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>Login</h2>
@@ -38,7 +37,6 @@ const Login = () => {
         <button type="submit" style={styles.button}>Login</button>
       </form>
       
-      {/* ✅ Register Here Button */}
       <p style={styles.registerText}>
         Don't have an account? <Link to="/register" style={styles.registerLink}>Register here</Link>
       </p>
@@ -46,7 +44,6 @@ const Login = () => {
   );
 };
 
-// ✅ Inline CSS Styles
 const styles = {
   container: {
     maxWidth: "400px",

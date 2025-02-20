@@ -16,12 +16,23 @@ const Register = () => {
       setError("All fields are required!");
       return;
     }
-
-    // Save user details in localStorage
-    localStorage.setItem("user", JSON.stringify(user));
-    alert("Registration successful! Redirecting to login...");
-    navigate("/login");
+  
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    console.log("Existing Users Before Register:", users);
+  
+    let existingUser = users.find((u) => u.email === user.email);
+  
+    if (existingUser) {
+      setError("User already exists with this email!");
+    } else {
+      users.push(user);
+      localStorage.setItem("users", JSON.stringify(users));
+      console.log("Updated Users List After Register:", users);
+      alert("Registration successful! Redirecting to login...");
+      navigate("/login");
+    }
   };
+  
 
   return (
     <div style={styles.container}>
